@@ -34,8 +34,8 @@ void setup() {
 }
 
 void loop() {
-  //colorWipe(strip.Color(0, 0, 0), 0);
-  rainbowCycle(2000000);
+  colorWipe(strip.Color(0, 0, 0), 0);
+  //rainbowCycle(2000000);
 
 }
 

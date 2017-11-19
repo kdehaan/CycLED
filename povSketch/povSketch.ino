@@ -15,7 +15,7 @@
 volatile unsigned long now = 0;
 volatile unsigned long lastTime = 0;
 volatile unsigned long currentTime = 0;
-volatile unsigned long goal = 900000;
+volatile unsigned long goal = 0;
 float slope = 3.89;//3.89;
 bool on;
 
@@ -24,6 +24,7 @@ float xk_1 = 0, vk_1 = 0, a = 0.5, b = 0.1;
 float xk, vk, rk;
 
 int error_tracking = 0;
+int loop_tracking = 0;
 
 
 
@@ -61,7 +62,7 @@ void setup() {
 void changeState() {
   on = !on;
   if (on) {
-    goal = 900000;
+    goal = 0;
   }
 }
 
@@ -80,7 +81,16 @@ void loop() {
 
 }
 
+void timeout() {
+  goal = 0;
+}
+
 void cycle() {
+  loop_tracking++;
+  if (loop_tracking > 5) {
+    goal = 0;
+    loop_tracking = 0;
+  }
   Serial.print("STARTING LOOP with goal ");
   Serial.println(goal/1000);
   int lambda;
@@ -155,6 +165,7 @@ unsigned long alphaBeta(unsigned long in) {
 
 
 void magnet_detect() {
+  loop_tracking = 0;
   digitalWrite(ledPin, HIGH);
   delay(1);
   digitalWrite(ledPin, LOW);

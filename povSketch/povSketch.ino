@@ -38,7 +38,8 @@ void setup() {
   pinMode(button, INPUT);
   pinMode(HALL, INPUT);
   PCintPort::attachInterrupt(button, changeState, FALLING);
-  PCintPort::attachInterrupt(HALL, magnet_detect, FALLING);
+  //PCintPort::attachInterrupt(HALL, magnet_detect, FALLING);
+  attachInterrupt(digitalPinToInterrupt(HALL), magnet_detect, FALLING);
   digitalWrite(button, HIGH);
   on = false;
   
@@ -61,10 +62,6 @@ void setup() {
 }
 
 void changeState() {
-//  int lambda;
-//  lambda = 0;
-//  goal = 803000;
-//  rainbowCycle(goal, lambda, 0);
   on = !on;
   if (on) {
     goal = 0;
@@ -80,17 +77,6 @@ void loop() {
     colorWipe(strip.Color(0, 0, 0), 0);
   }
   //cycle();
-
-//  int value = 0; 
-//  for (int i = 0; i<=11; i++){ 
-//    int lambda = 200*i; 
-//    rainbowCycle(1000000000, lambda, 0); 
-////    Serial.print("Lambda: "); 
-////    Serial.println(lambda); 
-//     
-//  } 
-//  colorWipe(strip.Color(0, 0, 0), 0); 
-//  exit(0); 
 
 }
 

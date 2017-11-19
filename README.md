@@ -9,6 +9,11 @@ Testing the wheel for the first time:
 
 ![Testing Indoors](https://github.com/kdehaan/poor-man-s-persistence-of-vision/raw/master/indoor.jpg "testing indoors")
 
+With all the lights off:
+
+![Lights Off](https://github.com/kdehaan/poor-man-s-persistence-of-vision/raw/master/off.jpg "lights off")
+
+
 Going for a ride:
 
 [![Bike POV](https://youtu.be/F7jCjdlAlsw)](https://youtu.be/F7jCjdlAlsw)

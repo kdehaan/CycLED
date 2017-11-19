@@ -3,6 +3,12 @@
 This is a project designed and built in under 24 hours at the November 2017 HackEd hackathon.
 The goal of the project was to create something that could be attached to a bicycle wheel that would track the revolutions per second and display a simple lightshow according to the frequency of revolution. When biking faster, the cycle of colours on the LED strip progresses more quickly, seeming to keep just ahead of the bicycle's speed at all times as the colors creep forward. When biking slowly, the color cycling slows in turn, yet still maintains a slightly faster rotation than the bicycle itself.
 
+**Pictures and Video**
+
+Testing the wheel for the first time:
+
+![Testing Indoors](https://github.com/kdehaan/poor-man-s-persistence-of-vision/raw/master/indoor.jpg "testing indoors")
+
 **Details**
 
 The software is set up such that it should technically be able to keep up with revolutions of up to 2400 rpm (40 rps) or roughly 288 kph. There is a physical button that allows for easy toggling of the leds, and the system starts in and returns to a stationary mode with all-white leds when not moving.

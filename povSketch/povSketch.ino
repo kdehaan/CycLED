@@ -15,6 +15,13 @@ volatile unsigned long currentTime = 0;
 volatile unsigned long goal = 900000;
 float slope = 3.89;
 
+float dt = 0.5;
+float xk_1 = 0, vk_1 = 0, a = 0.5, b = 0.1;
+float xk, vk, rk;
+
+int error_tracking = 0;
+
+
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
@@ -85,21 +92,58 @@ void cycle() {
   }
 }
 
+//unsigned int catchSkips(unsigned int in) {
+//  
+//}
+
+unsigned long alphaBeta(unsigned long in) {
+//  Serial.print("in: ");
+//  Serial.println(in);
+//  Serial.print("xk: ");
+//  Serial.println(xk);
+
+  if ((in > xk_1*1.7) & (xk_1 != 0)) {
+    error_tracking++;
+    Serial.println("erroneous input");
+    if (error_tracking >=3) {
+      Serial.println("error reset");
+      error_tracking = 0;
+      return in;
+    } else {
+      return xk_1;
+    }
+  }
+
+  xk = xk_1 + (vk_1 * dt);
+  vk = vk_1;
+
+  rk = in - xk;
+
+  xk += a * rk;
+  vk += ( b * rk ) / dt;
+
+  xk_1 = xk;
+  vk_1 = vk;
+
+
+  
+  return xk;
+}
+
 
 void magnet_detect() {
   currentTime = micros();
+  
+  unsigned long took = currentTime-lastTime;
+  goal = alphaBeta(took);
   Serial.print("goal: ");
-  goal = currentTime-lastTime;
   Serial.println(goal);
+  Serial.print("took: ");
+  Serial.println(took);
+  Serial.println("---------");
   lastTime = currentTime;
 }
 
-//void timeout() {
-//  unsigned long actual = micros()-now;
-//  Serial.print("took ");
-//  Serial.println(actual/1000);
-//  magnet_detect();
-//}
 
 
 // Fill the dots one actual the other with a color
@@ -124,16 +168,16 @@ void rainbowCycle(uint32_t goalMicro, int lambda, int multiplier) {
     if(Timer1.read() > (goalMicro - 1000)){
 //        Serial.print("got to: ");
 //        Serial.println(j);
-        Serial.print("took: ");
-        Serial.println(Timer1.read()/1000);
+        //Serial.print("took: ");
+        //Serial.println(Timer1.read()/1000);
         return;
     }
     delayMicroseconds(lambda);
     j = j+ multiplier;
   }
   
-  Serial.print("took: ");
-  Serial.println(Timer1.read()/1000);
+ // Serial.print("took: ");
+ // Serial.println(Timer1.read()/1000);
 }
 
 

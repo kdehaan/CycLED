@@ -1,8 +1,10 @@
 #include <Adafruit_NeoPixel.h>
 #include "TimerOne.h"
+#include "PinChangeInt.h"
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
+
 
 #define PIN 9
 #define HALL 3
@@ -33,6 +35,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(numLeds, PIN, NEO_GRB + NEO_KHZ800);
 void setup() {
   pinMode(ledPin, OUTPUT);
   pinMode(button, INPUT);
+  PCintPort::attachInterrupt(button, changeState, FALLING);
   digitalWrite(button, HIGH);
   on = false;
   
@@ -54,14 +57,15 @@ void setup() {
   //Timer1.attachInterrupt(timeout);
 }
 
+void changeState() {
+  on = !on;
+}
+
 void loop() {
-  if (digitalRead(button) == LOW) {
-    on = !on;
-  }
   if (on) {
     cycle();
   } else {
-    
+    colorWipe(strip.Color(0, 0, 0), 0);
   }
 
     

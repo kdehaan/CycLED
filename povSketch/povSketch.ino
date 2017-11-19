@@ -7,7 +7,7 @@
 #define PIN 9
 #define HALL 3
 #define ledPin 13
-#define numLeds 30
+#define numLeds 60
 
 volatile unsigned long now = 0;
 volatile unsigned long lastTime = 0;
@@ -42,12 +42,42 @@ void setup() {
 }
 
 void loop() {
+  int value = 0;
+  for (int i = 0; i<=11; i++){
+    int lambda = 200*i;
+    fastestRainbowCycle(1000000000, lambda);
+    Serial.print("Lambda: ");
+    Serial.println(lambda);
+    
+  }
+  colorWipe(strip.Color(0, 0, 0), 0);
+  exit(0);
+  
+  
 //  Serial.print("STARTING LOOP with goal ");
 //  Serial.println(goal/1000);
-//  int lambda = ((goal/1000) - 410)*3.89;
+//  int lambda;
+//  rainbowCycle(100000, 0);
+//  
+////  lambda = ((goal/1000) - 412)*3.89;
+////  rainbowCycle(goal, lambda);
+////  if(goal > 412000) {
+////    lambda = ((goal/1000) - 412)*3.89;
+////    rainbowCycle(goal, lambda);
+////  } else if (goal > 206000) {
+////    lambda = ((goal/1000) - 206)*3.89;
+////    fastRainbowCycle(goal, lambda);
+////  } else if (goal > 103000) {
+////    lambda = ((goal/1000) - 103)*3.89;
+////    fasterRainbowCycle(goal, lambda);
+////  } else if (goal > 51) {
+////    lambda = ((goal/1000) - 51)*3.89;
+////    fasterRainbowCycle(goal, lambda);
+////  }
 //  Serial.print("And lambda: ");
 //  Serial.println(lambda);
-//  rainbowCycle(goal, lambda);
+////  
+//  
 //  now = micros();
 
 

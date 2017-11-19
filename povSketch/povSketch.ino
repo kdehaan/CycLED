@@ -12,8 +12,10 @@
 volatile unsigned long now = 0;
 volatile unsigned long lastTime = 0;
 volatile unsigned long currentTime = 0;
-volatile unsigned long goal = 600000;
+volatile unsigned long goal = 26000;
 unsigned long microDif = goal;
+float slope = 3.89;
+
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
@@ -34,7 +36,7 @@ void setup() {
   
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
-  //attachInterrupt(digitalPinToInterrupt(HALL), magnet_detect, FALLING);
+  attachInterrupt(digitalPinToInterrupt(HALL), magnet_detect, FALLING);
   Timer1.initialize(1000000); // set a timer of length 100000 microseconds (or 0.1 sec - or 10Hz => the led will blink 5 times, 5 cycles of on-and-off, per second)
   Timer1.stop();
   Timer1.restart();
@@ -42,51 +44,53 @@ void setup() {
 }
 
 void loop() {
-  int value = 0;
-  for (int i = 0; i<=11; i++){
-    int lambda = 200*i;
-    fastestRainbowCycle(1000000000, lambda);
-    Serial.print("Lambda: ");
-    Serial.println(lambda);
-    
-  }
-  colorWipe(strip.Color(0, 0, 0), 0);
-  exit(0);
-  
-  
+ 
 //  Serial.print("STARTING LOOP with goal ");
 //  Serial.println(goal/1000);
 //  int lambda;
-//  rainbowCycle(100000, 0);
-//  
-////  lambda = ((goal/1000) - 412)*3.89;
-////  rainbowCycle(goal, lambda);
-////  if(goal > 412000) {
-////    lambda = ((goal/1000) - 412)*3.89;
-////    rainbowCycle(goal, lambda);
-////  } else if (goal > 206000) {
-////    lambda = ((goal/1000) - 206)*3.89;
-////    fastRainbowCycle(goal, lambda);
-////  } else if (goal > 103000) {
-////    lambda = ((goal/1000) - 103)*3.89;
-////    fasterRainbowCycle(goal, lambda);
-////  } else if (goal > 51) {
-////    lambda = ((goal/1000) - 51)*3.89;
-////    fasterRainbowCycle(goal, lambda);
-////  }
+//
+//  if(goal > 802000) {
+//    lambda = ((goal/1000) - 802)*slope;
+//    lambda = (numLeds/60)*lambda;
+//    rainbowCycle(goal, lambda, 0);
+//  } else if (goal > 401000) {
+//    lambda = ((goal/1000) - 401)*slope*2;
+//    lambda = (numLeds/60)*lambda;
+//    rainbowCycle(goal, lambda, 1);
+//  } else if (goal > 200000) {
+//    lambda = ((goal/1000) - 200)*slope*4;
+//    lambda = (numLeds/60)*lambda;
+//    rainbowCycle(goal, lambda, 3);
+//  } else if (goal > 100000) {
+//    lambda = ((goal/1000) - 100)*slope*8;
+//    lambda = (numLeds/60)*lambda;
+//    rainbowCycle(goal, lambda, 7);
+//  } else if (goal > 50000) {
+//    lambda = ((goal/1000) - 50)*slope*16;
+//    lambda = (numLeds/60)*lambda;
+//    rainbowCycle(goal, lambda, 15);
+//  } else if (goal > 25000) { //slow down speed racer
+//    lambda = ((goal/1000) - 25)*slope*32;
+//    lambda = (numLeds/60)*lambda;
+//    rainbowCycle(goal, lambda, 31);
+//  } else {
+//    colorWipe(strip.Color(255, 255, 255), 0);
+//  }
 //  Serial.print("And lambda: ");
 //  Serial.println(lambda);
-////  
-//  
-//  now = micros();
+
+    
 
 
 }
 
 
 void magnet_detect() {
-  
-  
+  currentTime = millis();
+  Serial.print("goal: ");
+  goal = currentTime-lastTime;
+  Serial.println(goal);
+  lastTime = currentTime;
 }
 
 //void timeout() {
@@ -106,7 +110,7 @@ void colorWipe(uint32_t c, uint8_t wait) {
   }
 }
 
-void fastestRainbowCycle(uint32_t goalMicro, int lambda) { //for less than 412
+void rainbowCycle(uint32_t goalMicro, int lambda, int multiplier) {
   Timer1.restart();
   uint16_t i, j;
   for(j=0; j<256; j++) { // 1 cycle of all colors on wheel
@@ -124,82 +128,13 @@ void fastestRainbowCycle(uint32_t goalMicro, int lambda) { //for less than 412
         return;
     }
     delayMicroseconds(lambda);
-    j = j+7;
+    j = j+ multiplier;
   }
   
   Serial.print("took: ");
   Serial.println(Timer1.read()/1000);
 }
 
-void fasterRainbowCycle(uint32_t goalMicro, int lambda) { //for less than 412
-  Timer1.restart();
-  uint16_t i, j;
-  for(j=0; j<256; j++) { // 1 cycle of all colors on wheel
-    
-    for(i=0; i< strip.numPixels(); i++) {
-      strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
-      
-    }
-    strip.show();
-    if(Timer1.read() > (goalMicro - 1000)){
-        Serial.print("got to: ");
-        Serial.println(j);
-        Serial.print("took: ");
-        Serial.println(Timer1.read());
-        return;
-    }
-    delayMicroseconds(lambda);
-    j = j+3;
-  }
-  
-  Serial.print("took: ");
-  Serial.println(Timer1.read()/1000);
-}
-
-void fastRainbowCycle(uint32_t goalMicro, int lambda) { //for less than 412
-  Timer1.restart();
-  uint16_t i, j;
-  for(j=0; j<256; j++) { // 1 cycle of all colors on wheel
-    j++;
-    for(i=0; i< strip.numPixels(); i++) {
-      strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
-      
-    }
-    strip.show();
-    if(Timer1.read() > (goalMicro - 1000)){
-        Serial.print("got to: ");
-        Serial.println(j);
-        Serial.print("took: ");
-        Serial.println(Timer1.read());
-        return;
-    }
-    delayMicroseconds(lambda);
-  }
-  Serial.print("took: ");
-  Serial.println(Timer1.read()/1000);
-}
-
-void rainbowCycle(uint32_t goalMicro, int lambda) {
-  Timer1.restart();
-  uint16_t i, j;
-  for(j=0; j<256; j++) { // 1 cycle of all colors on wheel
-    for(i=0; i< strip.numPixels(); i++) {
-      strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
-      
-    }
-    strip.show();
-    if(Timer1.read() > (goalMicro - 1000)){
-        Serial.print("got to: ");
-        Serial.println(j);
-        Serial.print("took: ");
-        Serial.println(Timer1.read());
-        return;
-    }
-    delayMicroseconds(lambda);
-  }
-  Serial.print("took: ");
-  Serial.println(Timer1.read()/1000);
-}
 
 uint32_t Wheel(byte WheelPos) {
   WheelPos = 255 - WheelPos;

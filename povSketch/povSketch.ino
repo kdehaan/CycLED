@@ -12,8 +12,7 @@
 volatile unsigned long now = 0;
 volatile unsigned long lastTime = 0;
 volatile unsigned long currentTime = 0;
-volatile unsigned long goal = 26000;
-unsigned long microDif = goal;
+volatile unsigned long goal = 900000;
 float slope = 3.89;
 
 
@@ -45,39 +44,37 @@ void setup() {
 
 void loop() {
  
-//  Serial.print("STARTING LOOP with goal ");
-//  Serial.println(goal/1000);
-//  int lambda;
-//
-//  if(goal > 802000) {
-//    lambda = ((goal/1000) - 802)*slope;
-//    lambda = (numLeds/60)*lambda;
-//    rainbowCycle(goal, lambda, 0);
-//  } else if (goal > 401000) {
-//    lambda = ((goal/1000) - 401)*slope*2;
-//    lambda = (numLeds/60)*lambda;
-//    rainbowCycle(goal, lambda, 1);
-//  } else if (goal > 200000) {
-//    lambda = ((goal/1000) - 200)*slope*4;
-//    lambda = (numLeds/60)*lambda;
-//    rainbowCycle(goal, lambda, 3);
-//  } else if (goal > 100000) {
-//    lambda = ((goal/1000) - 100)*slope*8;
-//    lambda = (numLeds/60)*lambda;
-//    rainbowCycle(goal, lambda, 7);
-//  } else if (goal > 50000) {
-//    lambda = ((goal/1000) - 50)*slope*16;
-//    lambda = (numLeds/60)*lambda;
-//    rainbowCycle(goal, lambda, 15);
-//  } else if (goal > 25000) { //slow down speed racer
-//    lambda = ((goal/1000) - 25)*slope*32;
-//    lambda = (numLeds/60)*lambda;
-//    rainbowCycle(goal, lambda, 31);
-//  } else {
-//    colorWipe(strip.Color(255, 255, 255), 0);
-//  }
-//  Serial.print("And lambda: ");
-//  Serial.println(lambda);
+  Serial.print("STARTING LOOP with goal ");
+  Serial.println(goal/1000);
+  int lambda;
+
+  if(goal > 802000) {
+    lambda = ((goal/1000) - 802)*slope;
+    lambda = (numLeds/60)*lambda;
+    rainbowCycle(goal, lambda, 0);
+  } else if (goal > 401000) {
+    lambda = ((goal/1000) - 401)*slope*2;
+    lambda = (numLeds/60)*lambda;
+    rainbowCycle(goal, lambda, 1);
+  } else if (goal > 200000) {
+    lambda = ((goal/1000) - 200)*slope*4;
+    lambda = (numLeds/60)*lambda;
+    rainbowCycle(goal, lambda, 3);
+  } else if (goal > 100000) {
+    lambda = ((goal/1000) - 100)*slope*8;
+    lambda = (numLeds/60)*lambda;
+    rainbowCycle(goal, lambda, 7);
+  } else if (goal > 50000) {
+    lambda = ((goal/1000) - 50)*slope*16;
+    lambda = (numLeds/60)*lambda;
+    rainbowCycle(goal, lambda, 15);
+  } else if (goal > 25000) { //slow down speed racer
+    lambda = ((goal/1000) - 25)*slope*32;
+    lambda = (numLeds/60)*lambda;
+    rainbowCycle(goal, lambda, 31);
+  } else {
+    colorWipe(strip.Color(255, 255, 255), 0);
+  }
 
     
 
@@ -86,7 +83,7 @@ void loop() {
 
 
 void magnet_detect() {
-  currentTime = millis();
+  currentTime = micros();
   Serial.print("goal: ");
   goal = currentTime-lastTime;
   Serial.println(goal);

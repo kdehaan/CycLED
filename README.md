@@ -9,6 +9,10 @@ Testing the wheel for the first time:
 
 ![Testing Indoors](https://github.com/kdehaan/poor-man-s-persistence-of-vision/raw/master/indoor.jpg "testing indoors")
 
+Going for a ride:
+
+[![Bike POV](https://youtu.be/F7jCjdlAlsw)](https://youtu.be/F7jCjdlAlsw)
+
 **Details**
 
 The software is set up such that it should technically be able to keep up with revolutions of up to 2400 rpm (40 rps) or roughly 288 kph. There is a physical button that allows for easy toggling of the leds, and the system starts in and returns to a stationary mode with all-white leds when not moving.

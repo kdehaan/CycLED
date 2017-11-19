@@ -44,6 +44,14 @@ void setup() {
 
 void loop() {
  
+  //cycle();
+
+    
+
+
+}
+
+void cycle() {
   Serial.print("STARTING LOOP with goal ");
   Serial.println(goal/1000);
   int lambda;
@@ -75,10 +83,6 @@ void loop() {
   } else {
     colorWipe(strip.Color(255, 255, 255), 0);
   }
-
-    
-
-
 }
 
 

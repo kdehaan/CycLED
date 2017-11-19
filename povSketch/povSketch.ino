@@ -8,12 +8,14 @@
 #define HALL 3
 #define ledPin 13
 #define numLeds 60
+#define button 12
 
 volatile unsigned long now = 0;
 volatile unsigned long lastTime = 0;
 volatile unsigned long currentTime = 0;
 volatile unsigned long goal = 900000;
 float slope = 3.89;
+bool on;
 
 float dt = 0.5;
 float xk_1 = 0, vk_1 = 0, a = 0.5, b = 0.1;
@@ -30,6 +32,9 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(numLeds, PIN, NEO_GRB + NEO_KHZ800);
 
 void setup() {
   pinMode(ledPin, OUTPUT);
+  pinMode(button, INPUT);
+  digitalWrite(button, HIGH);
+  on = false;
   
   // This is for Trinket 5V 16MHz, you can remove these three lines if you are not using a Trinket
   #if defined (__AVR_ATtiny85__)
@@ -50,8 +55,14 @@ void setup() {
 }
 
 void loop() {
- 
-  //cycle();
+  if (digitalRead(button) == LOW) {
+    on = !on;
+  }
+  if (on) {
+    cycle();
+  } else {
+    
+  }
 
     
 
@@ -108,6 +119,7 @@ unsigned long alphaBeta(unsigned long in) {
     if (error_tracking >=3) {
       Serial.println("error reset");
       error_tracking = 0;
+      xk_1 = in;
       return in;
     } else {
       return xk_1;
@@ -136,11 +148,11 @@ void magnet_detect() {
   
   unsigned long took = currentTime-lastTime;
   goal = alphaBeta(took);
-  Serial.print("goal: ");
-  Serial.println(goal);
-  Serial.print("took: ");
-  Serial.println(took);
-  Serial.println("---------");
+//  Serial.print("goal: ");
+//  Serial.println(goal);
+//  Serial.print("took: ");
+//  Serial.println(took);
+//  Serial.println("---------");
   lastTime = currentTime;
 }
 

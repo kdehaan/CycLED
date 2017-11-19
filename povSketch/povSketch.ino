@@ -16,7 +16,7 @@ volatile unsigned long now = 0;
 volatile unsigned long lastTime = 0;
 volatile unsigned long currentTime = 0;
 volatile unsigned long goal = 900000;
-float slope = 3.89;
+float slope = 3.89;//3.89;
 bool on;
 
 float dt = 0.5;
@@ -36,6 +36,7 @@ void setup() {
   pinMode(ledPin, OUTPUT);
   pinMode(button, INPUT);
   PCintPort::attachInterrupt(button, changeState, FALLING);
+  PCintPort::attachInterrupt(HALL, magnet_detect, FALLING);
   digitalWrite(button, HIGH);
   on = false;
   
@@ -50,7 +51,7 @@ void setup() {
   
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
-  attachInterrupt(digitalPinToInterrupt(HALL), magnet_detect, FALLING);
+  
   Timer1.initialize(1000000); // set a timer of length 100000 microseconds (or 0.1 sec - or 10Hz => the led will blink 5 times, 5 cycles of on-and-off, per second)
   Timer1.stop();
   Timer1.restart();
@@ -59,14 +60,20 @@ void setup() {
 
 void changeState() {
   on = !on;
+  if (on) {
+    goal = 900000;
+  }
 }
 
 void loop() {
   if (on) {
     cycle();
+    //digitalWrite(ledPin, HIGH);
   } else {
+    //digitalWrite(ledPin, LOW);
     colorWipe(strip.Color(0, 0, 0), 0);
   }
+  //cycle();
 
     
 
@@ -148,7 +155,11 @@ unsigned long alphaBeta(unsigned long in) {
 
 
 void magnet_detect() {
+  digitalWrite(ledPin, HIGH);
+  delay(1);
+  digitalWrite(ledPin, LOW);
   currentTime = micros();
+  
   
   unsigned long took = currentTime-lastTime;
   goal = alphaBeta(took);

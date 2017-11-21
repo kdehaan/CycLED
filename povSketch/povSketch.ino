@@ -17,6 +17,7 @@ volatile unsigned long lastTime = 0;
 volatile unsigned long currentTime = 0;
 volatile unsigned long goal = 0;
 float slope = 3.5;//3.89;
+float adjustment = 1;
 bool on;
 
 float dt = 0.5;
@@ -98,27 +99,27 @@ void cycle() {
 
   if(goal > 804000) {
     lambda = ((goal/1000) - 804)*slope;
-    lambda = (numLeds/60)*lambda;
+    lambda = (numLeds/60)*lambda*adjustment;
     rainbowCycle(goal, lambda, 0);
   } else if (goal > 402000) {
     lambda = ((goal/1000) - 402)*slope*2;
-    lambda = (numLeds/60)*lambda;
+    lambda = (numLeds/60)*lambda*adjustment;
     rainbowCycle(goal, lambda, 1);
   } else if (goal > 201000) {
     lambda = ((goal/1000) - 201)*slope*4;
-    lambda = (numLeds/60)*lambda;
+    lambda = (numLeds/60)*lambda*adjustment;
     rainbowCycle(goal, lambda, 3);
   } else if (goal > 100000) {
     lambda = ((goal/1000) - 100)*slope*8;
-    lambda = (numLeds/60)*lambda;
+    lambda = (numLeds/60)*lambda*adjustment;
     rainbowCycle(goal, lambda, 7);
   } else if (goal > 50000) {
     lambda = ((goal/1000) - 50)*slope*16;
-    lambda = (numLeds/60)*lambda;
+    lambda = (numLeds/60)*lambda*adjustment;
     rainbowCycle(goal, lambda, 15);
   } else if (goal > 25000) { //slow down speed racer
     lambda = ((goal/1000) - 25)*slope*32;
-    lambda = (numLeds/60)*lambda;
+    lambda = (numLeds/60)*lambda*adjustment;
     rainbowCycle(goal, lambda, 31);
   } else {
     colorWipe(strip.Color(255, 255, 255), 0);
@@ -159,8 +160,6 @@ unsigned long alphaBeta(unsigned long in) {
   xk_1 = xk;
   vk_1 = vk;
 
-
-  
   return xk;
 }
 
